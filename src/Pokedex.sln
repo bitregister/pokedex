@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokedex.WebApi", "Pokedex.WebApi\Pokedex.WebApi.csproj", "{005A849F-6E0D-41E5-B812-A7EFE27EFC95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokedex.Test", "Pokedex.Test\Pokedex.Test.csproj", "{76C26E8F-7065-4980-B616-BC1D145B0FBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokedex.Core.Test", "Pokedex.Test\Pokedex.Core.Test.csproj", "{76C26E8F-7065-4980-B616-BC1D145B0FBF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokedex.Core", "Pokedex.Core\Pokedex.Core.csproj", "{4B8EC7DD-11E0-409C-ACB6-B4A47CFD4B8B}"
 EndProject
