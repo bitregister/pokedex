@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Flurl.Http.Testing;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -40,6 +42,16 @@ namespace Pokedex.Core.Test.Repositories
             Assert.AreEqual("en", result.FlavorTextEntries.First().Language.Name);
         }
 
+        [Test]
+        public void Given_A_Pokemon_Name_That_Does_Not_Exist_Returns_ResourceNotFound()
+        {
+            //Arrange
+            _httpTest.RespondWith("Resource not found", (int)HttpStatusCode.NotFound);
+
+            //Assert
+            Assert.ThrowsAsync<FlurlHttpException>(() => _pokeApiRepository.GetPokemonByName("MewThree"));
+        }
+        
         [TearDown]
         public void DisposeHttpTest()
         {
