@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Pokedex.Core.Models;
+using Pokedex.Core.Models.PokeApi;
 
 namespace Pokedex.Core.Test.Helpers
 {

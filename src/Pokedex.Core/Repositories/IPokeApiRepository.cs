@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Pokedex.Core.Models;
+using Pokedex.Core.Models.PokeApi;
 
 namespace Pokedex.Core.Repositories
 {

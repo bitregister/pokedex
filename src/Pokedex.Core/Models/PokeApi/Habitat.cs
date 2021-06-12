@@ -1,4 +1,4 @@
-﻿namespace Pokedex.Core.Models
+﻿namespace Pokedex.Core.Models.PokeApi
 {
     public record Habitat ()
     {

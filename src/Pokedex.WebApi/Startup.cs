@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Pokedex.Core.Repositories;
+using Pokedex.Core.Services;
 
 namespace Pokedex.WebApi
 {
@@ -32,6 +34,9 @@ namespace Pokedex.WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pokedex.WebApi", Version = "v1" });
             });
+
+            services.AddScoped<IPokeApiRepository, PokeApiRepository>();
+            services.AddScoped<IPokeApiService, PokeApiService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

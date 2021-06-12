@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Pokedex.Core.Models
+namespace Pokedex.Core.Models.PokeApi
 {
     public record FlavorTextEntry
     {

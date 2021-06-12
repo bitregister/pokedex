@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
-using Pokedex.Core.Models;
+using Pokedex.Core.Models.PokeApi;
 using Serilog;
 
 namespace Pokedex.Core.Repositories

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Flurl.Http;
+using Pokedex.Core.Responses;
+using Pokedex.Core.Services;
 
 namespace Pokedex.WebApi.Controllers
 {
@@ -11,11 +11,30 @@ namespace Pokedex.WebApi.Controllers
     [ApiController]
     public class PokemonController : ControllerBase
     {
+        private readonly IPokeApiService _pokeApiService;
+
+        public PokemonController(IPokeApiService pokeApiService)
+        {
+            _pokeApiService = pokeApiService;
+        }
+        
         [HttpGet]
         [Route("{id}")]
-        public void Index(string id)
+        public async Task<ActionResult<PokemonResponse>> Index(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _pokeApiService.GetPokemonByNameAsync(id);
+                return result;
+            }
+            catch (FlurlHttpException e)
+            {
+                if (e.StatusCode == (int)HttpStatusCode.NotFound)
+                    return NotFound();
+
+                throw;
+            }
+            
         }
 
     }

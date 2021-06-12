@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Pokedex.Core.Models;
+using Pokedex.Core.Models.PokeApi;
 using Pokedex.Core.Repositories;
 using Pokedex.Core.Responses;
 
 namespace Pokedex.Core.Services
 {
-    public class PokeApiService
+    public class PokeApiService : IPokeApiService
     {
         private readonly IPokeApiRepository _pokeApiRepository;
 
