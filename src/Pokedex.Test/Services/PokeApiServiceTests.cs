@@ -35,6 +35,22 @@ namespace Pokedex.Core.Test.Services
             Assert.AreEqual("MewTwo", result.Name);
             Assert.IsTrue(result.IsLegendary);
             Assert.AreEqual("The Description", result.Description);
+            Assert.AreEqual("Cave", result.Habitat);
+        }
+
+        [Test]
+        public async Task Given_A_Pokemon_Name_And_It_Returns_A_PokemonResponse_WithNullHabitat_Returns_Empty_Value()
+        {
+            //Arrange
+            var expectedPokemon = TestHelper.ConfigurePokemon(habitatName: null);
+
+            _mockApiRepository.Setup(pokeApiRepository => pokeApiRepository.GetPokemonByNameAsync(It.Is<string>(s => s.Equals("MewTwo")))).ReturnsAsync(expectedPokemon);
+
+            //Act
+            var result = await _pokeApiService.GetPokemonByNameAsync("MewTwo");
+
+            //Assert
+            Assert.AreEqual("", result.Habitat);
         }
     }
 }

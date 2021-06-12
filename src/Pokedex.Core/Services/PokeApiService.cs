@@ -29,8 +29,9 @@ namespace Pokedex.Core.Services
         private static PokemonResponse MapApiPokemonResponseToPokemonResponse(Pokemon pokemon)
         {
             var description = GetDescription(pokemon.FlavorTextEntries);
+            var habitatName = GetHabitatName(pokemon.Habitat);
 
-            var pokemonResponse = new PokemonResponse(pokemon.Id, pokemon.Name, pokemon.IsLegendary, description);
+            var pokemonResponse = new PokemonResponse(pokemon.Id, pokemon.Name, pokemon.IsLegendary, description, habitatName);
             return pokemonResponse;
         }
 
@@ -46,6 +47,11 @@ namespace Pokedex.Core.Services
             var result = SanitiseDescriptionText(firstEnglishEntry);
 
             return result;
+        }
+
+        private static string GetHabitatName(Habitat habitat)
+        {
+            return habitat != null ? habitat.Name : string.Empty;
         }
 
         private static string SanitiseDescriptionText(FlavorTextEntry firstEnglishEntry)

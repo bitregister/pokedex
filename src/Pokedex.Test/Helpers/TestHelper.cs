@@ -5,14 +5,22 @@ namespace Pokedex.Core.Test.Helpers
 {
     public class TestHelper
     {
-        public static Pokemon ConfigurePokemon(string id = "1", string name = "MewTwo", bool isLegendary = true, string description = "The Description", string languageName = "en")
+        public static Pokemon ConfigurePokemon(string id = "1", string name = "MewTwo", bool isLegendary = true, string description = "The Description", string languageName = "en", string habitatName = "Cave")
         {
             var language = new Language { Name = languageName };
 
             var flavorTextEntry = new FlavorTextEntry { Description = description, Language = language };
-            var flavorTextEntryList = new List<FlavorTextEntry> { flavorTextEntry };
+            var flavorTextExtraEntry = new FlavorTextEntry { Description = "another description", Language = language };
+            var flavorTextSpanishEntry = new FlavorTextEntry { Description = "spanish description", Language = new Language(){ Name = "ES"} };
 
-            var habitat = new Habitat {Name = "Cave"};
+            var flavorTextEntryList = new List<FlavorTextEntry> { flavorTextEntry, flavorTextExtraEntry, flavorTextSpanishEntry };
+
+            Habitat habitat = null;
+
+            if (habitatName != null)
+            {
+                habitat = new Habitat { Name = habitatName };
+            }
 
             var pokemon = new Pokemon
             {
