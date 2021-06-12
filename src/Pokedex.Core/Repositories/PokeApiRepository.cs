@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Pokedex.Core.Models;
@@ -7,13 +6,13 @@ using Serilog;
 
 namespace Pokedex.Core.Repositories
 {
-    public class PokeApiRepository
+    public class PokeApiRepository : IPokeApiRepository
     {
-        public async Task<Pokemon> GetPokemonByName(string name)
+        public async Task<Pokemon> GetPokemonByNameAsync(string name)
         {
             try
             {
-                var result = await "https://pokeapi.co"  //TODO: Error handling and logging, and injection of config
+                var result = await "https://pokeapi.co" 
                     .AppendPathSegment("api")
                     .AppendPathSegment("v2")
                     .AppendPathSegment("pokemon-species")

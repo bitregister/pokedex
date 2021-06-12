@@ -14,5 +14,8 @@ namespace Pokedex.Core.Models
 
         [JsonProperty("Flavor_Text_Entries")]
         public IEnumerable<FlavorTextEntry> FlavorTextEntries { get; set; }
+
+        public Habitat Habitat { get; set; }
+
     }
 }
