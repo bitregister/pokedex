@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Pokedex.Core.Enums;
+using Pokedex.Core.Models.FunTranslations;
 using Pokedex.Core.Models.PokeApi;
 using Pokedex.Core.Repositories;
 using Pokedex.Core.Responses;
@@ -11,20 +14,51 @@ namespace Pokedex.Core.Services
     public class PokeApiService : IPokeApiService
     {
         private readonly IPokeApiRepository _pokeApiRepository;
+        private readonly IFunTranslationsRepository _funTranslationsRepository;
 
-        public PokeApiService(IPokeApiRepository pokeApiRepository)
+        public PokeApiService(IPokeApiRepository pokeApiRepository, IFunTranslationsRepository funTranslationsRepository)
         {
             _pokeApiRepository = pokeApiRepository;
+            _funTranslationsRepository = funTranslationsRepository;
         }
 
-        public async Task<PokemonResponse> GetPokemonByNameAsync(string name)
+        public async Task<PokemonResponse> GetPokemonByNameAsync(string name, bool translate = false)
         {
             var result = await _pokeApiRepository.GetPokemonByNameAsync(name);
             var response = MapApiPokemonResponseToPokemonResponse(result);
-            
-            return response;
-        }
 
+            if (!translate)
+            {
+                return response;
+            }
+
+            Translation translation;
+
+            try
+            {
+                if (response.IsLegendary || response.Habitat.Equals("Cave", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    translation = await _funTranslationsRepository.GetTranslationAsync(response.Description, TranslationEnum.Yoda);
+                }
+                else
+                {
+                    translation = await _funTranslationsRepository.GetTranslationAsync(response.Description, TranslationEnum.Shakespeare);
+                }
+            }
+            catch
+            {
+                return response;
+            }
+            
+            if (translation == null)
+            {
+                return response;
+            }
+                
+            var responseWithTranslation = response with {Description = translation.Contents.Translated};
+            return responseWithTranslation;
+        }
+        
         private static PokemonResponse MapApiPokemonResponseToPokemonResponse(Pokemon pokemon)
         {
             var description = GetDescription(pokemon.FlavorTextEntries);

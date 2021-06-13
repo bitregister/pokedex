@@ -17,7 +17,7 @@ namespace Pokedex.WebApi.Controllers
         {
             _pokeApiService = pokeApiService;
         }
-        
+
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<PokemonResponse>> Index(string id)
@@ -29,13 +29,30 @@ namespace Pokedex.WebApi.Controllers
             }
             catch (FlurlHttpException e)
             {
+                if (e.StatusCode == (int) HttpStatusCode.NotFound)
+                    return NotFound();
+
+                throw;
+            }
+        }
+
+        [HttpGet]
+        [Route("translated/{id}")]
+        public async Task<ActionResult<PokemonResponse>> Translated(string id)
+        {
+            try
+            {
+                var result = await _pokeApiService.GetPokemonByNameAsync(id, true);
+                return result;
+            }
+            catch (FlurlHttpException e)
+            {
                 if (e.StatusCode == (int)HttpStatusCode.NotFound)
                     return NotFound();
 
                 throw;
             }
-            
-        }
 
+        }
     }
 }

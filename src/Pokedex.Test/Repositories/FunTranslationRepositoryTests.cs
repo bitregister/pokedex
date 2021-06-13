@@ -22,18 +22,19 @@ namespace Pokedex.Core.Test.Repositories
             _funTranslationsApiApiRepository = new FunTranslationsApiRepository();
         }
 
-        [Test]
-        public async Task Given_A_Translation_To_Yoda_It_The_Expected_Translation()
+        [TestCase(TranslationEnum.Yoda, "The force is strong with this one.", "Strong with this one the force is.")]
+        [TestCase(TranslationEnum.Shakespeare, "The force is strong with this one.", "The force is stout with this one.")]
+        public async Task Given_A_Translation_To_Yoda_It_The_Expected_Translation(TranslationEnum targetTranslation, string inputDescription, string expectedDescription)
         {
             //Arrange
-            var expectedResponse = JsonConvert.SerializeObject(new Translation { Contents = new Contents() { Translated = "Strong with this one the force is." } });
+            var expectedResponse = JsonConvert.SerializeObject(new Translation { Contents = new Contents() { Translated = expectedDescription } });
             _httpTest.RespondWith(expectedResponse);
 
             //Act
-            var result = await _funTranslationsApiApiRepository.GetTranslationAsync("The force is strong with this one.", TranslationEnum.Yoda);
+            var result = await _funTranslationsApiApiRepository.GetTranslationAsync(inputDescription, targetTranslation);
 
             //Assert
-            Assert.AreEqual("Strong with this one the force is.", result.Contents.Translated);
+            Assert.AreEqual(expectedDescription, result.Contents.Translated);
         }
 
         [TestCase(HttpStatusCode.NotFound)]

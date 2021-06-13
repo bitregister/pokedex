@@ -1,41 +1,50 @@
 ﻿using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
+using Pokedex.Core.Enums;
+using Pokedex.Core.Models.FunTranslations;
 using Serilog;
-using TranslationEnum = Pokedex.Core.Enums.TranslationEnum;
 
 namespace Pokedex.Core.Repositories
 {
     public class FunTranslationsApiRepository : IFunTranslationsRepository
     {
-        public async Task<Models.FunTranslations.Translation> GetTranslationAsync(string descriptionText, TranslationEnum translation)
+        public async Task<Translation> GetTranslationAsync(string descriptionText, TranslationEnum translation)
         {
             try
             {
-                if (translation == TranslationEnum.Yoda)
+                switch (translation)
                 {
-                    var result = await "https://api.funtranslations.com"
-                        .AppendPathSegment("translate")
-                        .AppendPathSegment("yoda.json")
-                        .AppendPathSegment(descriptionText)
-                        .GetJsonAsync<Models.FunTranslations.Translation>();
+                    case TranslationEnum.Yoda:
+                    {
+                        var result = await "https://api.funtranslations.com"
+                            .AppendPathSegment("translate")
+                            .AppendPathSegment("yoda.json")
+                            .SetQueryParam("text", descriptionText)
+                            .GetJsonAsync<Translation>();
 
-                    return result;
+                        return result;
+                    }
+                    case TranslationEnum.Shakespeare:
+                    {
+                        var result = await "https://api.funtranslations.com"
+                            .AppendPathSegment("translate")
+                            .AppendPathSegment("shakespeare.json")
+                            .SetQueryParam("text", descriptionText)
+                            .GetJsonAsync<Translation>();
+
+                        return result;
+                    }
+                    default:
+                        Log.Error("Unsupported Translation");
+                        return null;
                 }
-
-                Log.Error("Unsupported Translation");
-                return null;
             }
             catch (FlurlHttpException e)
             {
                 Log.Error(e, "Failed to translate text {Text}", descriptionText);
                 throw;
             }
-        }
-
-        public Task<Models.FunTranslations.Translation> GetTranslationAsync(string descriptionText, Models.FunTranslations.Translation translation)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
