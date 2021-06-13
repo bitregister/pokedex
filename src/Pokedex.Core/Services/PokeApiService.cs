@@ -6,6 +6,7 @@ using Pokedex.Core.Models.PokeApi;
 using Pokedex.Core.Repositories;
 using Pokedex.Core.Responses;
 using Pokedex.Core.Services.Translation;
+using Serilog;
 
 namespace Pokedex.Core.Services
 {
@@ -22,22 +23,29 @@ namespace Pokedex.Core.Services
 
         public async Task<PokemonResponse> GetPokemonByNameAsync(string name, bool translate = false)
         {
+            Log.Debug("Getting Pokemon by name: {Name}", name);
+
             var result = await _pokeApiRepository.GetPokemonByNameAsync(name);
             var response = MapApiPokemonResponseToPokemonResponse(result);
 
             if (!translate)
             {
+                Log.Debug("Pokemon Found @{Response}", response);
                 return response;
             }
 
             var translation = await GetTranslation(response);
 
             var responseWithTranslation = response with {Description = translation};
+
+            Log.Debug("Pokemon Found (with Translation) @{Response}", responseWithTranslation);
+
             return responseWithTranslation;
         }
 
         private async Task<string> GetTranslation(PokemonResponse response)
         {
+            Log.Debug("Getting Pokemon Description Translation for: {Description}", response.Description);
             return await _translationService.GetTranslation(response);
         }
 

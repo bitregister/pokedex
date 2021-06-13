@@ -12,11 +12,13 @@ namespace Pokedex.Core.Repositories
         {
             try
             {
+                var searchName = name.ToLower();
+
                 var result = await "https://pokeapi.co" 
                     .AppendPathSegment("api")
                     .AppendPathSegment("v2")
                     .AppendPathSegment("pokemon-species")
-                    .AppendPathSegment(name)
+                    .AppendPathSegment(searchName)
                     .GetJsonAsync<Pokemon>();
 
                 return result;
