@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Pokedex.Core.Enums;
-using Pokedex.Core.Models.FunTranslations;
 using Pokedex.Core.Models.PokeApi;
 using Pokedex.Core.Repositories;
 using Pokedex.Core.Responses;
+using Pokedex.Core.Services.Translation;
 
 namespace Pokedex.Core.Services
 {
@@ -32,33 +31,30 @@ namespace Pokedex.Core.Services
                 return response;
             }
 
-            Translation translation;
+            var translation = await GetTranslation(response);
 
-            try
-            {
-                if (response.IsLegendary || response.Habitat.Equals("Cave", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    translation = await _funTranslationsRepository.GetTranslationAsync(response.Description, TranslationEnum.Yoda);
-                }
-                else
-                {
-                    translation = await _funTranslationsRepository.GetTranslationAsync(response.Description, TranslationEnum.Shakespeare);
-                }
-            }
-            catch
-            {
-                return response;
-            }
-            
-            if (translation == null)
-            {
-                return response;
-            }
-                
-            var responseWithTranslation = response with {Description = translation.Contents.Translated};
+            var responseWithTranslation = response with {Description = translation};
             return responseWithTranslation;
         }
-        
+
+        private async Task<string> GetTranslation(PokemonResponse response)
+        {
+            string translation;
+
+            if (response.IsLegendary || response.Habitat.Equals("Cave", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var translator = new Translator(new YodaTranslationStrategy(_funTranslationsRepository));
+                translation = await translator.TranslateAsync(response.Description);
+            }
+            else
+            {
+                var translator = new Translator(new ShakespeareTranslationStrategy(_funTranslationsRepository));
+                translation = await translator.TranslateAsync(response.Description);
+            }
+
+            return translation;
+        }
+
         private static PokemonResponse MapApiPokemonResponseToPokemonResponse(Pokemon pokemon)
         {
             var description = GetDescription(pokemon.FlavorTextEntries);
