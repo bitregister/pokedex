@@ -15,15 +15,8 @@ namespace Pokedex.Core.Services.Translation
 
         public async Task<string> Translate(string description)
         {
-            try
-            {
-                var result = await _funTranslationsRepository.GetTranslationAsync(description, TranslationEnum.Shakespeare);
-                return result.Contents.Translated;
-            }
-            catch
-            {
-                return description;
-            }
+            var result = await _funTranslationsRepository.GetTranslationAsync(description, TranslationEnum.Shakespeare);
+            return result.Contents.Translated;
         }
     }
 }

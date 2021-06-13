@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -13,12 +12,12 @@ namespace Pokedex.Core.Services
     public class PokeApiService : IPokeApiService
     {
         private readonly IPokeApiRepository _pokeApiRepository;
-        private readonly IFunTranslationsRepository _funTranslationsRepository;
-
-        public PokeApiService(IPokeApiRepository pokeApiRepository, IFunTranslationsRepository funTranslationsRepository)
+        private readonly ITranslationService _translationService;
+        
+        public PokeApiService(IPokeApiRepository pokeApiRepository, ITranslationService translationService)
         {
             _pokeApiRepository = pokeApiRepository;
-            _funTranslationsRepository = funTranslationsRepository;
+            _translationService = translationService;
         }
 
         public async Task<PokemonResponse> GetPokemonByNameAsync(string name, bool translate = false)
@@ -39,20 +38,7 @@ namespace Pokedex.Core.Services
 
         private async Task<string> GetTranslation(PokemonResponse response)
         {
-            string translation;
-
-            if (response.IsLegendary || response.Habitat.Equals("Cave", StringComparison.InvariantCultureIgnoreCase))
-            {
-                var translator = new Translator(new YodaTranslationStrategy(_funTranslationsRepository));
-                translation = await translator.TranslateAsync(response.Description);
-            }
-            else
-            {
-                var translator = new Translator(new ShakespeareTranslationStrategy(_funTranslationsRepository));
-                translation = await translator.TranslateAsync(response.Description);
-            }
-
-            return translation;
+            return await _translationService.GetTranslation(response);
         }
 
         private static PokemonResponse MapApiPokemonResponseToPokemonResponse(Pokemon pokemon)

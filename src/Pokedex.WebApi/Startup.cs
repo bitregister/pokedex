@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Pokedex.Core.Repositories;
 using Pokedex.Core.Services;
+using Pokedex.Core.Services.Translation;
 
 namespace Pokedex.WebApi
 {
@@ -31,6 +32,8 @@ namespace Pokedex.WebApi
             services.AddScoped<IPokeApiRepository, PokeApiRepository>();
             services.AddScoped<IPokeApiService, PokeApiService>();
             services.AddScoped<IFunTranslationsRepository, FunTranslationsApiRepository>();
+            services.AddTransient<ITranslationStrategyFactory, TranslationStrategyFactory>();
+            services.AddTransient<ITranslationService, TranslationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
