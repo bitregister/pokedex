@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Flurl.Http;
-using Pokedex.Core.Responses;
+using Microsoft.AspNetCore.Http;
 using Pokedex.Core.Services;
 
 namespace Pokedex.WebApi.Controllers
@@ -20,37 +20,39 @@ namespace Pokedex.WebApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<PokemonResponse>> Index(string id)
+        public async Task<IActionResult> Index(string id)
         {
             try
             {
                 var result = await _pokeApiService.GetPokemonByNameAsync(id);
-                return result;
+                return new JsonResult(result);
             }
             catch (FlurlHttpException e)
             {
                 if (e.StatusCode == (int) HttpStatusCode.NotFound)
                     return NotFound();
 
-                throw;
+                Response.StatusCode = StatusCodes.Status500InternalServerError;
+                return new JsonResult("Failed to process your request");
             }
         }
 
         [HttpGet]
         [Route("translated/{id}")]
-        public async Task<ActionResult<PokemonResponse>> Translated(string id)
+        public async Task<IActionResult> Translated(string id)
         {
             try
             {
                 var result = await _pokeApiService.GetPokemonByNameAsync(id, true);
-                return result;
+                return new JsonResult(result);
             }
             catch (FlurlHttpException e)
             {
                 if (e.StatusCode == (int)HttpStatusCode.NotFound)
                     return NotFound();
 
-                throw;
+                Response.StatusCode = StatusCodes.Status500InternalServerError;
+                return new JsonResult("Failed to process your request");
             }
 
         }
