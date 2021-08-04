@@ -8,9 +8,9 @@ This has been tested in Visual Studio on both a Windows and Mac so should be fin
 
 ## Design notes
 
-Several patterns have been employed to help ensure SOLID principles are adhered to as much as possible, this includes: 
+Several patterns have been employed to help ensure SOLID principles are adhered to as much as possible, this includes:
 1. A repository pattern to encapsulate the calls the 3rd Party Apis (PokeApi and FunTranslation), this helps ensure that the responsibility of querying these data sources is kept within these classes and can be easily mocked.
-2. A strategy pattern to assist with deciding what translation to apply, this is helped by a factory pattern to return which strategy to use. The idea behind this is we can easily add additional translations with the business logic to decide which translation to use only in the `TranslationService` 
+2. A strategy pattern to assist with deciding what translation to apply, this is helped by a factory pattern to return which strategy to use. The idea behind this is we can easily add additional translations with the business logic to decide which translation to use only in the `TranslationService`
 3. By employing the above I've kept all business logic out of the web api controllers which are now very lightweight.
 4. I've made significant use of the Flurlhttp library, an alternative that I considered was the native HttpClient but I like the fluent building of the Urls and this also provides a good way of testing the underlying HttpClient.
 
@@ -23,3 +23,5 @@ If this was going to be deployed to Production I would recommend the following a
 3. Logs will need to be sent to some central source, in Azure I'd use Log Analytics (via Serilog sink)
 4. The application will also be configured to run only over HTTPS (currently just HTTP).
 5. If necessary, the config files could be modified to include specific settings for the various environment required.
+
+Some more notes
